@@ -1,7 +1,8 @@
-Patient Outcome Prediction with TPC Networks
+[Replication] Patient Outcome Prediction with TPC Networks
 ===============================
 
-## Original repository: https://github.com/EmmaRocheteau/TPC-LoS-prediction
+## Original repository
+ - https://github.com/EmmaRocheteau/TPC-LoS-prediction
 
 
 ## Reproducibility Project Grading Rubrics for CS598 DL4H in Spring 2023 

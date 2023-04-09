@@ -1,9 +1,110 @@
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/temporal-pointwise-convolutional-networks-for/predicting-patient-outcomes-on-eicu)](https://paperswithcode.com/sota/predicting-patient-outcomes-on-eicu?p=temporal-pointwise-convolutional-networks-for)
-
 Patient Outcome Prediction with TPC Networks
 ===============================
 
-Original repository: https://github.com/EmmaRocheteau/TPC-LoS-prediction
+## Original repository: https://github.com/EmmaRocheteau/TPC-LoS-prediction
+
+
+## Reproducibility Project Grading Rubrics for CS598 DL4H in Spring 2023 
+### General
+The entire project has 100 points (+ bonus 10 points) and will account for 40% (+ bonus 4%) of your class grade. The specific points are as follows:
+
+ - Proposal (10 Points)
+ - Draft (20 Points)
+ - Final Report (50 Points)
+ - Presentation (10 Points)
+ - Code (10 Points)
+ - Notebook (bonus 5 points)
+ - PyHealth contribution (bonus 5 points)
+
+### Proposal (10 Points)
+You need to have all eight items listed in the project instructions (citation to the original paper, general problem, specific approach, hypotheses to be tested, ablations planned, description of how you will access the data, a discussion of the feasibility of the computation, whether you will use the existing code or not). 
+
+For this component we will not judge quality unless you put complete nonsense for an item (then it will be considered ‘missing’) but we will give you feedback if we think there are problems.
+
+ - Missing citation to the original paper (-1)
+ - Missing general problem (-2)
+ - Missing specific approach (-2)
+ - Missing hypotheses to be tested (-1)
+ - Missing ablations planned (-1)
+ - Missing description of how you will access the data (-1)
+ - Missing discussion of the feasibility of the computation (-1)
+ - Missing statement of whether you will use the existing code or not (-1)
+ - Exceed page limits (-1)
+
+
+### Draft (20 Points)
+You need to use the report template and fill out the following sections, each of which we will score based on the clarity and appropriateness of your writing (percentage of total grade for each component shown).
+
+ - Introduction (2)
+ A clear, high-level description of what the original paper is about and what is the contribution of it
+ - Scope of reproducibility (2)
+ - Methodology (8)
+   - Model descriptions
+   - Data descriptions
+   - Implementation
+   - Computational requirements
+ - Results (8)
+   - Results
+   - Analyses
+   - Plans
+ - Over 4 pages excluding references (-2)
+
+### Final Report (50 Points)
+ - Introduction (5):
+   A clear, high-level description of what the original paper is about and what is the contribution of it
+ - Scope of reproducibility (5)
+ - Methodology (15)
+   - Model description
+   - Dataset description
+   - Hyperparams
+     - Report at least 3 types of hyperparameters such as learning rate, batch size, hidden size, dropout
+   - Implementation
+     - Link to code repo
+   - Computational requirements
+     - Report at least 3 types of requirements such as type of hardware, avg runtime for each epoch, total number of trial, GPU hrs used, # training epochs
+  - Results (15)
+    - All claims should be supported by experiment results
+    - Discuss with respect to the hypothesis and results from the original paper
+    - Experiments beyond the original paper
+      - Credits for each experiment depend on how hard it is to run the experiments. Each experiment should include results and discussion
+ - Discussion (10)
+   - Implications of the experimental results, whether the original paper was reproducible, and if it wasn’t, what factors made it irreproducible
+   -“What was easy”
+   - “What was difficult”
+   - Recommendations to the original authors or others who work in this area for improving reproducibility
+- Over 6 pages excluding references (-5)
+
+### Presentation (10 Points)
+We expect a well-timed, well-presented presentation. You should clearly explain what the original paper is about (what the general problem is, what the specific approach taken was, and what the results claimed were) and what you encountered when you attempted to reproduce the results. You should use the time given to you and not too much (or too little).
+
+ - <= 4 mins
+ - Explain the general problem clearly
+ - Explain the specific approach taken in the paper clearly
+ - Explain reproduction attempts clearly
+
+### Code (10 Points)
+ - Citation to the original paper
+ - Link to the original paper’s repo (if applicable)
+ - Dependencies
+ - Data download instruction
+ - Preprocessing code + command (if applicable)
+ - Training code + command (if applicable)
+ - Evaluation code + command (if applicable)
+ - Pretrained model (if applicable)
+ - Table of results (no need to include additional experiments, but main reproducibility result should be included)
+
+### Descriptive Notebook (Bonus 5 Points)
+ - Reproducibility summary (1)
+   - A summary of the report and findings, about 200 words
+ - Visualization of data statistics (1)
+   - An overview of the data with any helpful charts and visualizations from the report and ideally directly using the dataset in the notebook (maybe link to the data folder or URL).
+ - Methodology explanation and examples (1)
+   - An overview of the methodology and experiments run, ideally with executable code examples
+ - Illustration of the results (tables, charts) (1)
+   - A summary of the key results.
+ - References (1)
+   - A references section, more than 3 up to 20 references.
+
 
 This repository contains the code used for **Temporal Pointwise Convolutional Networks for Length of Stay Prediction in the Intensive Care Unit** (published at **ACM CHIL 2021**) and implementation instructions. You can watch a brief project talk here:
 

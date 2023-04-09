@@ -37,7 +37,7 @@ For this component we will not judge quality unless you put complete nonsense fo
 You need to use the report template and fill out the following sections, each of which we will score based on the clarity and appropriateness of your writing (percentage of total grade for each component shown).
 
  - Introduction (2)
- A clear, high-level description of what the original paper is about and what is the contribution of it
+   - A clear, high-level description of what the original paper is about and what is the contribution of it
  - Scope of reproducibility (2)
  - Methodology (8)
    - Model descriptions
@@ -52,7 +52,7 @@ You need to use the report template and fill out the following sections, each of
 
 ### Final Report (50 Points)
  - Introduction (5):
-   A clear, high-level description of what the original paper is about and what is the contribution of it
+   - A clear, high-level description of what the original paper is about and what is the contribution of it
  - Scope of reproducibility (5)
  - Methodology (15)
    - Model description

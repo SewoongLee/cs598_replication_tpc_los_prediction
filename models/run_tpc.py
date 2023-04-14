@@ -17,15 +17,12 @@ class TPC(ExperimentTemplate):
         return
 
 
-if __name__=='__main__':
+def run_tpc():
 
     c = initialise_tpc_arguments()
+
     c['exp_name'] = 'TPC'
     
-    # c['model_type'] = 'tpc'  # Not working
-    # c['model_type'] = 'temp_only'  # Not working
-    c['model_type'] = 'pointwise_only'  # Good!
-
     log_folder_path = create_folder('models/experiments/{}/{}'.format(c.dataset, c.task), c.exp_name)
 
     tpc = TPC(config=c,
@@ -35,3 +32,8 @@ if __name__=='__main__':
               explogger_kwargs={'folder_format': '%Y-%m-%d_%H%M%S{run_number}'})
     
     tpc.run()
+
+
+if __name__=='__main__':
+    
+    run_tpc()

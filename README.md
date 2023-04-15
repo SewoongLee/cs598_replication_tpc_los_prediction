@@ -4,6 +4,8 @@
 ## Original repository
  - https://github.com/EmmaRocheteau/TPC-LoS-prediction
 
+## Our Jupyter Notebook for Project Summary, Visualization, and Illustration
+ - [main/summary_notebook.ipynb](https://github.com/SewoongLee/cs598_replication_tpc_los_prediction/blob/main/summary_notebook.ipynb).
 
 ## Reproducibility Project Grading Rubrics for CS598 DL4H in Spring 2023 
 ### General

@@ -443,7 +443,7 @@ class TempPointConv(nn.Module):
         X_combined = self.relu(cat((temp_skip, X_point_rep), dim=1))  # B * (F + Zt) * (1 + temp_kernels) * T
         next_X = X_combined.reshape(B, (point_skip.shape[1] + point_size) * (1 + temp_kernels), T)  # B * ((F + Zt + point_size) * (1 + temp_kernels)) * T
 
-        temp_output = X_temp.permute(0, 2, 1).contiguous().view(B * T, point_skip.shape[1] * temp_kernels)  # (B * T) * ((F + Zt) * temp_kernels)
+        temp_output = X_temp.permute(0, 2, 1).contiguous().reshape(B * T, point_skip.shape[1] * temp_kernels)  # (B * T) * ((F + Zt) * temp_kernels)
 
         return (temp_output,  # (B * T) * ((F + Zt) * temp_kernels)
                 point_output,  # (B * T) * point_size
@@ -547,9 +547,9 @@ class TempPointConv(nn.Module):
             if self.no_mask:
                 X_orig = cat((X_separated[0],
                               X[:, 0, :].unsqueeze(1),
-                              X[:, -1, :].unsqueeze(1)), dim=1).permute(0, 2, 1).contiguous().view(B * T, self.F + 2)  # (B * T) * (F + 2)
+                              X[:, -1, :].unsqueeze(1)), dim=1).permute(0, 2, 1).contiguous().reshape(B * T, self.F + 2)  # (B * T) * (F + 2)
             else:
-                X_orig = X.permute(0, 2, 1).contiguous().view(B * T, 2 * self.F + 2)  # (B * T) * (2F + 2)
+                X_orig = X.permute(0, 2, 1).contiguous().reshape(B * T, 2 * self.F + 2)  # (B * T) * (2F + 2)
             repeat_args = {'repeat_flat': repeat_flat,
                            'X_orig': X_orig,
                            'B': B,
@@ -566,7 +566,7 @@ class TempPointConv(nn.Module):
                 next_X = X_orig
                 point_skip = None
         elif self.model_type == 'temp_only':
-            next_X = torch.stack(X_separated, dim=2).view(B, 2 * self.F, T)  # B * 2F * T
+            next_X = torch.stack(X_separated, dim=2).reshape(B, 2 * self.F, T)  # B * 2F * T
             X_temp_orig = X_separated[0]  # skip connections for temp only model
             repeat_args = {'X_temp_orig': X_temp_orig,
                            'B': B,

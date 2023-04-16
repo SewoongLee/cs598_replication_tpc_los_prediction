@@ -1,3 +1,4 @@
+import json
 import torch
 from eICU_preprocessing.reader import eICUReader
 from MIMIC_preprocessing.reader import MIMICReader
@@ -41,6 +42,15 @@ def remove_padding(y, mask, device):
     y = y.where(mask, torch.tensor(float('nan')).to(device=device)).flatten().detach().cpu().numpy()
     y = y[~np.isnan(y)]
     return y
+
+def write_paths_to_json(key, elog):
+    with open("experiments_paths.json") as f:
+        experiments_paths = json.load(f)
+    
+    experiments_paths[key] = elog.work_dir
+
+    with open('experiments_paths.json', 'w') as f:
+        json.dump(experiments_paths, f)
 
 
 class ExperimentTemplate(PytorchExperiment):

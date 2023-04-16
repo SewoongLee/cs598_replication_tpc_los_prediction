@@ -2,12 +2,16 @@ from eICU_preprocessing.split_train_test import create_folder
 from torch.optim import Adam
 from models.lstm_model import BaseLSTM
 from models.experiment_template import ExperimentTemplate
+from models.experiment_template import write_paths_to_json
 from models.initialise_arguments import initialise_lstm_arguments
 
 
 class BaselineLSTM(ExperimentTemplate):
     def setup(self):
         self.setup_template()
+
+        write_paths_to_json(self.config['exp_name'], self.elog)
+
         self.model = BaseLSTM(config=self.config,
                               F=self.train_datareader.F,
                               D=self.train_datareader.D,
@@ -23,6 +27,7 @@ if __name__=='__main__':
     c['exp_name'] = 'LSTM'
 
     log_folder_path = create_folder('models/experiments/{}/{}'.format(c.dataset, c.task), c.exp_name)
+
     baseline_lstm = BaselineLSTM(config=c,
                                  n_epochs=c.n_epochs,
                                  name=c.exp_name,

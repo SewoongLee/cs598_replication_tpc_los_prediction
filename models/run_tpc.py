@@ -2,12 +2,16 @@ from eICU_preprocessing.split_train_test import create_folder
 from torch.optim import Adam
 from models.tpc_model import TempPointConv
 from models.experiment_template import ExperimentTemplate
+from models.experiment_template import write_paths_to_json
 from models.initialise_arguments import initialise_tpc_arguments
 
 
 class TPC(ExperimentTemplate):
     def setup(self):
         self.setup_template()
+
+        write_paths_to_json(self.config["model_type"], self.elog)
+
         self.model = TempPointConv(config=self.config,
                                    F=self.train_datareader.F,
                                    D=self.train_datareader.D,

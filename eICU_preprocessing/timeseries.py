@@ -3,6 +3,7 @@ from itertools import islice
 import numpy as np
 import json
 import os
+import time
 
 def reconfigure_timeseries(timeseries, offset_column, feature_column=None, test=False):
     if test:
@@ -99,20 +100,17 @@ def gen_patient_chunk(patients, size=1000):
         chunk = list(islice(it, size))
 
 def gen_timeseries_file(eICU_path, test=False):
-
     print('==> Loading data from timeseries files...')
     if test:
-        timeseries_lab = pd.read_csv(eICU_path + 'timeserieslab.csv', nrows=500000)
-        timeseries_resp = pd.read_csv(eICU_path + 'timeseriesresp.csv', nrows=500000)
-        timeseries_nurse = pd.read_csv(eICU_path + 'timeseriesnurse.csv', nrows=500000)
-        timeseries_periodic = pd.read_csv(eICU_path + 'timeseriesperiodic.csv', nrows=500000)
-        timeseries_aperiodic = pd.read_csv(eICU_path + 'timeseriesaperiodic.csv', nrows=500000)
+        pd_kwargs = {'nrows': 500000}
     else:
-        timeseries_lab = pd.read_csv(eICU_path + 'timeserieslab.csv')
-        timeseries_resp = pd.read_csv(eICU_path + 'timeseriesresp.csv')
-        timeseries_nurse = pd.read_csv(eICU_path + 'timeseriesnurse.csv')
-        timeseries_periodic = pd.read_csv(eICU_path + 'timeseriesperiodic.csv')
-        timeseries_aperiodic = pd.read_csv(eICU_path + 'timeseriesaperiodic.csv')
+        pd_kwargs = {}
+
+    timeseries_lab = pd.read_csv(eICU_path + 'timeserieslab.csv', **pd_kwargs)
+    timeseries_resp = pd.read_csv(eICU_path + 'timeseriesresp.csv', **pd_kwargs)
+    timeseries_nurse = pd.read_csv(eICU_path + 'timeseriesnurse.csv', **pd_kwargs)
+    timeseries_periodic = pd.read_csv(eICU_path + 'timeseriesperiodic.csv', **pd_kwargs)
+    timeseries_aperiodic = pd.read_csv(eICU_path + 'timeseriesaperiodic.csv', **pd_kwargs)
 
     print('==> Reconfiguring lab timeseries...')
     timeseries_lab = reconfigure_timeseries(timeseries_lab,

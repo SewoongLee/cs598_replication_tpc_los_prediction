@@ -40,6 +40,10 @@ def initialise_arguments():
     parser.add_argument('--batchnorm', default='mybatchnorm', type=str, help='can be: none, pointwiseonly, temponly, '
                         'default, mybatchnorm or low_momentum. \nfconly, convonly and low_momentum are implemented with '
                         'mybatchnorm rather than default pytorch')
+    
+    # optim
+    parser.add_argument('--optim', default='Adam', type=str)
+
     return parser
 
 def gen_config(parser):

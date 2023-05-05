@@ -1,5 +1,6 @@
 from eICU_preprocessing.split_train_test import create_folder
 from torch.optim import Adam
+from torch.optim import SGD
 from models.tpc_model import TempPointConv
 from models.experiment_template import ExperimentTemplate
 from models.experiment_template import write_paths_to_json
@@ -17,7 +18,12 @@ class TPC(ExperimentTemplate):
                                    D=self.train_datareader.D,
                                    no_flat_features=self.train_datareader.no_flat_features).to(device=self.device)
         self.elog.print(self.model)
-        self.optimiser = Adam(self.model.parameters(), lr=self.config.learning_rate, weight_decay=self.config.L2_regularisation)
+
+        if self.config["optim"] == "SGD":
+            self.optimiser = SGD(self.model.parameters(), lr=self.config.learning_rate, weight_decay=self.config.L2_regularisation)
+        else:
+            self.optimiser = Adam(self.model.parameters(), lr=self.config.learning_rate, weight_decay=self.config.L2_regularisation)
+        
         return
 
 

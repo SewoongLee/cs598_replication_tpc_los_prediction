@@ -3,6 +3,7 @@ from itertools import islice
 import numpy as np
 import json
 import os
+import time
 
 def reconfigure_timeseries(timeseries, offset_column, feature_column=None, test=False):
     if test:
@@ -99,58 +100,112 @@ def gen_patient_chunk(patients, size=1000):
         chunk = list(islice(it, size))
 
 def gen_timeseries_file(eICU_path, test=False):
-
     print('==> Loading data from timeseries files...')
+    cache_path = './cache/'
     if test:
-        timeseries_lab = pd.read_csv(eICU_path + 'timeserieslab.csv', nrows=500000)
-        timeseries_resp = pd.read_csv(eICU_path + 'timeseriesresp.csv', nrows=500000)
-        timeseries_nurse = pd.read_csv(eICU_path + 'timeseriesnurse.csv', nrows=500000)
-        timeseries_periodic = pd.read_csv(eICU_path + 'timeseriesperiodic.csv', nrows=500000)
-        timeseries_aperiodic = pd.read_csv(eICU_path + 'timeseriesaperiodic.csv', nrows=500000)
+        pd_kwargs = {'nrows': 500000}
+        cache_path += 'test/'
     else:
-        timeseries_lab = pd.read_csv(eICU_path + 'timeserieslab.csv')
-        timeseries_resp = pd.read_csv(eICU_path + 'timeseriesresp.csv')
-        timeseries_nurse = pd.read_csv(eICU_path + 'timeseriesnurse.csv')
-        timeseries_periodic = pd.read_csv(eICU_path + 'timeseriesperiodic.csv')
-        timeseries_aperiodic = pd.read_csv(eICU_path + 'timeseriesaperiodic.csv')
+        pd_kwargs = {}
+        cache_path += 'train/'
 
-    print('==> Reconfiguring lab timeseries...')
-    timeseries_lab = reconfigure_timeseries(timeseries_lab,
+    os.makedirs(cache_path, exist_ok=True)
+
+    # timeserieslab
+    print('timeserieslab')
+    if os.path.exists(cache_path + 'reconfigured_timeserieslab.csv'):
+        timeseries_lab = pd.read_csv(cache_path + 'reconfigured_timeserieslab.csv')
+        print('\t read reconfigured data')
+    else:
+        start = time.perf_counter()
+        timeseries_lab = pd.read_csv(eICU_path + 'timeserieslab.csv', **pd_kwargs)
+        print('\t read raw data', time.perf_counter() - start)
+        timeseries_lab = reconfigure_timeseries(timeseries_lab,
                                             offset_column='labresultoffset',
                                             feature_column='labname',
                                             test=test)
-    timeseries_lab.columns = timeseries_lab.columns.droplevel()
+        timeseries_lab.columns = timeseries_lab.columns.droplevel()
+        print('\t reconfigured', time.perf_counter() - start)
+        timeseries_lab.to_csv(cache_path + 'reconfigured_timeserieslab.csv')
+        print('\t wrote', time.perf_counter() - start)
 
-    print('==> Reconfiguring respiratory timeseries...')
-    # get rid of % signs (found in FiO2 section) and then convert into numbers
-    timeseries_resp = timeseries_resp.replace('%', '', regex=True)
-    timeseries_resp['respchartvalue'] = pd.to_numeric(timeseries_resp['respchartvalue'], errors='coerce')
-    timeseries_resp = timeseries_resp.loc[timeseries_resp['respchartvalue'].notnull()]
-    timeseries_resp = reconfigure_timeseries(timeseries_resp,
-                                             offset_column='respchartoffset',
-                                             feature_column='respchartvaluelabel',
-                                             test=test)
-    timeseries_resp.columns = timeseries_resp.columns.droplevel()
+    # timeseriesresp
+    print('timeseriesresp')
+    if os.path.exists(cache_path + 'reconfigured_timeseriesresp.csv'):
+        timeseries_resp = pd.read_csv(cache_path + 'reconfigured_timeseriesresp.csv')
+        print('\t read reconfigured data')
+    else:
+        start = time.perf_counter()
+        timeseries_resp = pd.read_csv(eICU_path + 'timeseriesresp.csv', **pd_kwargs)
+        print('\t read raw data', time.perf_counter() - start)
+        # get rid of % signs (found in FiO2 section) and then convert into numbers
+        timeseries_resp = timeseries_resp.replace('%', '', regex=True)
+        timeseries_resp['respchartvalue'] = pd.to_numeric(timeseries_resp['respchartvalue'], errors='coerce')
+        timeseries_resp = timeseries_resp.loc[timeseries_resp['respchartvalue'].notnull()]
+        timeseries_resp = reconfigure_timeseries(timeseries_resp,
+                                                offset_column='respchartoffset',
+                                                feature_column='respchartvaluelabel',
+                                                test=test)
+        timeseries_resp.columns = timeseries_resp.columns.droplevel()
+        print('\t reconfigured', time.perf_counter() - start)
+        timeseries_resp.to_csv(cache_path + 'reconfigured_timeseriesresp.csv')
+        print('\t wrote', time.perf_counter() - start)
 
-    print('==> Reconfiguring nurse timeseries...')
-    # remove non numeric data
-    timeseries_nurse['nursingchartvalue'] = pd.to_numeric(timeseries_nurse['nursingchartvalue'], errors='coerce')
-    timeseries_nurse = timeseries_nurse.loc[timeseries_nurse['nursingchartvalue'].notnull()]
-    timeseries_nurse = reconfigure_timeseries(timeseries_nurse,
-                                              offset_column='nursingchartoffset',
-                                              feature_column='nursingchartcelltypevallabel',
-                                              test=test)
-    timeseries_nurse.columns = timeseries_nurse.columns.droplevel()
+    # timeseriesnurse
+    print('timeseriesnurse')
+    if os.path.exists(cache_path + 'reconfigured_timeseriesnurse.csv'):
+        timeseries_nurse = pd.read_csv(cache_path + 'reconfigured_timeseriesnurse.csv')
+        print('\t read reconfigured data')
+    else:
+        start = time.perf_counter()
+        timeseries_nurse = pd.read_csv(eICU_path + 'timeseriesnurse.csv', **pd_kwargs)
+        print('\t read raw data', time.perf_counter() - start)
+        # remove non numeric data
+        timeseries_nurse['nursingchartvalue'] = pd.to_numeric(timeseries_nurse['nursingchartvalue'], errors='coerce')
+        timeseries_nurse = timeseries_nurse.loc[timeseries_nurse['nursingchartvalue'].notnull()]
+        timeseries_nurse = reconfigure_timeseries(timeseries_nurse,
+                                                offset_column='nursingchartoffset',
+                                                feature_column='nursingchartcelltypevallabel',
+                                                test=test)
+        timeseries_nurse.columns = timeseries_nurse.columns.droplevel()
+        print('\t reconfigured', time.perf_counter() - start)
+        timeseries_nurse.to_csv(cache_path + 'reconfigured_timeseriesnurse.csv')
+        print('\t wrote', time.perf_counter() - start)
 
-    print('==> Reconfiguring aperiodic timeseries...')
-    timeseries_aperiodic = reconfigure_timeseries(timeseries_aperiodic,
-                                                  offset_column='observationoffset',
-                                                  test=test)
-
-    print('==> Reconfiguring periodic timeseries...')
-    timeseries_periodic = reconfigure_timeseries(timeseries_periodic,
+    # timeseriesperiodic
+    print('timeseriesperiodic')
+    if os.path.exists(cache_path + 'reconfigured_timeseriesperiodic.csv'):
+        timeseries_periodic = pd.read_csv(cache_path + 'reconfigured_timeseriesperiodic.csv')
+        print('\t read reconfigured data')
+    else:
+        start = time.perf_counter()
+        timeseries_periodic = pd.read_csv(eICU_path + 'timeseriesperiodic.csv', **pd_kwargs)
+        print('\t read raw data', time.perf_counter() - start)
+        timeseries_periodic = reconfigure_timeseries(timeseries_periodic,
                                                  offset_column='observationoffset',
                                                  test=test)
+        print('\t reconfigured', time.perf_counter() - start)
+        timeseries_periodic.to_csv(cache_path + 'reconfigured_timeseriesperiodic.csv')
+        print('\t wrote', time.perf_counter() - start)
+    
+    # timeseriesaperiodic
+    print('timeseriesaperiodic')
+    if os.path.exists(cache_path + 'reconfigured_timeseriesaperiodic.csv'):
+        timeseries_aperiodic = pd.read_csv(cache_path + 'reconfigured_timeseriesaperiodic.csv')
+        print('\t read reconfigured data')
+    else:
+        start = time.perf_counter()
+        timeseries_aperiodic = pd.read_csv(eICU_path + 'timeseriesaperiodic.csv', **pd_kwargs)
+        print('\t read raw data', time.perf_counter() - start)
+        # get rid of % signs (found in FiO2 section) and then convert into numbers
+        timeseries_aperiodic = reconfigure_timeseries(timeseries_aperiodic,
+                                                  offset_column='observationoffset',
+                                                  test=test)
+        print('\t reconfigured', time.perf_counter() - start)
+        timeseries_aperiodic.to_csv(cache_path + 'reconfigured_timeseriesaperiodic.csv')
+        print('\t wrote', time.perf_counter() - start)
+
+    print('==> All timeseries data read successfully.')
 
     patients = timeseries_periodic.index.unique(level=0)
 
